@@ -26,10 +26,10 @@ import { toPlainText, toMarkdown } from '../../../lib/exporters';
  *         description: Not found
  */
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query as { id: string };
   const format = (req.query.format as string) || 'json';
-  const record = store.get(id);
+  const record = await store.get(id);
   if (!record) return res.status(404).json({ message: 'Not found' });
 
   if (format === 'text') {

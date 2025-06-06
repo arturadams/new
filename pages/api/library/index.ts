@@ -33,22 +33,23 @@ import { store, StoredRecord } from '../../../lib/dataStore';
  *       204:
  *         description: Cleared
  */
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { id, type, payload } = req.body as Omit<StoredRecord, 'receivedAt'>;
     if (!id || !type) {
       return res.status(400).json({ message: 'id and type are required' });
     }
-    const entry = store.add({ id, type, payload });
+    const entry = await store.add({ id, type, payload });
     return res.status(200).json(entry);
   }
 
   if (req.method === 'GET') {
-    return res.status(200).json(store.list());
+    const data = await store.list();
+    return res.status(200).json(data);
   }
 
   if (req.method === 'DELETE') {
-    store.clear();
+    await store.clear();
     return res.status(204).end();
   }
 

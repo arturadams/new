@@ -16,7 +16,8 @@
     "swagger-jsdoc": "^7.0.0",
     "swagger-ui-express": "^4.6.3",
     "next-swagger-doc": "^0.0.4",
-    "swagger-ui-react": "^4.15.5"
+    "swagger-ui-react": "^4.15.5",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

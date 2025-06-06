@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import pool from './db';
 
 export type StoredRecord = {
   id: string;
@@ -9,60 +8,74 @@ export type StoredRecord = {
   updatedAt?: number;
 };
 
-const DB_PATH = path.join(process.cwd(), 'lib', 'db.json');
-
-function readFile(): StoredRecord[] {
-  try {
-    return JSON.parse(fs.readFileSync(DB_PATH, 'utf8')) as StoredRecord[];
-  } catch {
-    return [];
-  }
-}
-
-function writeFile(data: StoredRecord[]) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-}
-
 class DataStore {
-  private records: StoredRecord[] = readFile();
-
-  add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>) {
-    if (this.records.find((r) => r.id === record.id)) {
-      throw new Error('Record with this id already exists');
-    }
-    const entry: StoredRecord = { ...record, receivedAt: Date.now() };
-    this.records.push(entry);
-    writeFile(this.records);
-    return entry;
+  constructor() {
+    pool.query(`
+      CREATE TABLE IF NOT EXISTS records (
+        id TEXT PRIMARY KEY,
+        type TEXT NOT NULL,
+        payload JSONB,
+        received_at BIGINT NOT NULL,
+        updated_at BIGINT
+      )
+    `).catch((err) => console.error('init table error', err));
   }
 
-  list() {
-    return this.records;
+  async add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>): Promise<StoredRecord> {
+    const receivedAt = Date.now();
+    await pool.query(
+      'INSERT INTO records (id, type, payload, received_at) VALUES ($1, $2, $3, $4)',
+      [record.id, record.type, JSON.stringify(record.payload), receivedAt]
+    );
+    return { ...record, receivedAt };
   }
 
-  get(id: string) {
-    return this.records.find((r) => r.id === id) || null;
+  async list(): Promise<StoredRecord[]> {
+    const { rows } = await pool.query('SELECT * FROM records');
+    return rows.map((r) => ({
+      id: r.id,
+      type: r.type,
+      payload: r.payload,
+      receivedAt: Number(r.received_at),
+      updatedAt: r.updated_at ? Number(r.updated_at) : undefined,
+    }));
   }
 
-  update(id: string, update: Partial<Omit<StoredRecord, 'id' | 'receivedAt'>>) {
-    const record = this.records.find((r) => r.id === id);
+  async get(id: string): Promise<StoredRecord | null> {
+    const { rows } = await pool.query('SELECT * FROM records WHERE id = $1', [id]);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      id: r.id,
+      type: r.type,
+      payload: r.payload,
+      receivedAt: Number(r.received_at),
+      updatedAt: r.updated_at ? Number(r.updated_at) : undefined,
+    };
+  }
+
+  async update(id: string, update: Partial<Omit<StoredRecord, 'id' | 'receivedAt'>>): Promise<StoredRecord | null> {
+    const record = await this.get(id);
     if (!record) return null;
-    Object.assign(record, update, { updatedAt: Date.now() });
-    writeFile(this.records);
+    const payload = update.payload !== undefined ? update.payload : record.payload;
+    const type = update.type || record.type;
+    const updatedAt = Date.now();
+    await pool.query(
+      'UPDATE records SET type = $2, payload = $3, updated_at = $4 WHERE id = $1',
+      [id, type, JSON.stringify(payload), updatedAt]
+    );
+    return { id, type, payload, receivedAt: record.receivedAt, updatedAt };
+  }
+
+  async remove(id: string): Promise<StoredRecord | null> {
+    const record = await this.get(id);
+    if (!record) return null;
+    await pool.query('DELETE FROM records WHERE id = $1', [id]);
     return record;
   }
 
-  remove(id: string) {
-    const idx = this.records.findIndex((r) => r.id === id);
-    if (idx === -1) return null;
-    const [deleted] = this.records.splice(idx, 1);
-    writeFile(this.records);
-    return deleted;
-  }
-
-  clear() {
-    this.records = [];
-    writeFile(this.records);
+  async clear(): Promise<void> {
+    await pool.query('DELETE FROM records');
   }
 }
 

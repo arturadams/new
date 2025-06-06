@@ -51,24 +51,24 @@ import { store } from '../../../lib/dataStore';
  *         description: Not found
  */
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query as { id: string };
 
   if (req.method === 'GET') {
-    const record = store.get(id);
+    const record = await store.get(id);
     if (!record) return res.status(404).json({ message: 'Not found' });
     return res.status(200).json(record);
   }
 
   if (req.method === 'PUT') {
     const update = req.body as any;
-    const record = store.update(id, update);
+    const record = await store.update(id, update);
     if (!record) return res.status(404).json({ message: 'Not found' });
     return res.status(200).json(record);
   }
 
   if (req.method === 'DELETE') {
-    const deleted = store.remove(id);
+    const deleted = await store.remove(id);
     if (!deleted) return res.status(404).json({ message: 'Not found' });
     return res.status(204).end();
   }
