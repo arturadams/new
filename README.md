@@ -1,6 +1,6 @@
 # Data Library API
 
-This project is a simple Next.js application written in TypeScript and styled with Tailwind CSS. It exposes an API for storing arbitrary data objects in an in-memory store and provides Swagger documentation.
+This project is a simple Next.js application written in TypeScript and styled with Tailwind CSS. It exposes an API for storing arbitrary data objects in a JSON file and provides Swagger documentation. A small web UI lets you manage and export stored outcomes.
 
 ## Features
 
@@ -8,6 +8,8 @@ This project is a simple Next.js application written in TypeScript and styled wi
 - **TypeScript** – Static type checking.
 - **Tailwind CSS** – Utility-first styling.
 - **Swagger UI** – Documentation available at `/api-docs`.
+- **Persistent Storage** – Records are saved to `lib/db.json`.
+- **Outcomes UI** – Browse and edit items at `/outcomes`.
 
 ## Available Scripts
 
@@ -15,4 +17,4 @@ This project is a simple Next.js application written in TypeScript and styled wi
 - `npm run build` – Build the application for production.
 - `npm start` – Start the production server.
 
-The API endpoint `/api/library` supports `GET` and `POST` requests. `POST` accepts a JSON body with `id`, `type`, and `payload` fields and stores the record in memory.
+The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional item routes under `/api/library/[id]` allow updating or removing records. `/api/export/[id]` can export a record as JSON, plain text, or Markdown.

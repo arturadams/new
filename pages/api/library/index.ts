@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { store, StoredRecord } from '../../lib/dataStore';
+import { store, StoredRecord } from '../../../lib/dataStore';
 
 /**
  * @swagger
@@ -27,6 +27,11 @@ import { store, StoredRecord } from '../../lib/dataStore';
  *     responses:
  *       200:
  *         description: Stored record
+ *   delete:
+ *     description: Remove all records.
+ *     responses:
+ *       204:
+ *         description: Cleared
  */
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -42,6 +47,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json(store.list());
   }
 
-  res.setHeader('Allow', ['GET', 'POST']);
+  if (req.method === 'DELETE') {
+    store.clear();
+    return res.status(204).end();
+  }
+
+  res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
   res.status(405).end(`Method ${req.method} Not Allowed`);
 }
