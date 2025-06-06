@@ -56,3 +56,4 @@ This command populates the `records` table with a few example entries using the 
 1. Push this repo to a Git host and create a new site on Netlify.
 2. In **Site settings → Environment variables**, set `DATABASE_URL` to your PostgreSQL connection string.
 3. Netlify reads `netlify.toml` and runs `npm run build` with the `@netlify/plugin-nextjs` plugin to deploy the app.
+4. The plugin automatically publishes files from the `.next` directory; do not set the publish directory to the repo root.
