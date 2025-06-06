@@ -22,6 +22,25 @@ The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional
 
 Set the `DATABASE_URL` environment variable to your Neon PostgreSQL connection string before running the server.
 
+### Tailwind CSS Setup
+
+Global Tailwind styles are imported in `pages/_app.tsx` via:
+
+```tsx
+import '../styles/globals.css'
+```
+
+The referenced stylesheet defines the standard Tailwind directives:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+If you add new files that use Tailwind classes, be sure their paths are listed
+in `tailwind.config.js` so the framework can generate the necessary styles.
+
 ### Seeding Sample Data
 
 To quickly see the UI with some content, run:
