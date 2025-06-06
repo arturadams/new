@@ -20,7 +20,13 @@ This project is a simple Next.js application written in TypeScript and styled wi
 
 The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional item routes under `/api/library/[id]` allow updating or removing records. `/api/export/[id]` can export a record as JSON, plain text, or Markdown.
 
-Set the `DATABASE_URL` environment variable to your Neon PostgreSQL connection string before running the server.
+## Environment Variables
+
+Before starting the server you must provide a PostgreSQL connection string via the `DATABASE_URL` environment variable. The application will fail to boot if this value is missing.
+
+```bash
+export DATABASE_URL=postgres://USER:PASSWORD@HOST/DATABASE
+```
 
 ### Tailwind CSS Setup
 
