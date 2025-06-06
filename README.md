@@ -9,7 +9,7 @@ This project is a simple Next.js application written in TypeScript and styled wi
 - **Tailwind CSS** – Utility-first styling.
 - **Swagger UI** – Documentation available at `/api-docs`.
 - **Persistent Storage** – Records are saved to PostgreSQL.
-- **Outcomes UI** – Browse and edit items at `/outcomes`.
+- **Outcomes UI** – Browse and edit items on the home page (`/`).
 
 ## Available Scripts
 
