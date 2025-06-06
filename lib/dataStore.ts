@@ -18,7 +18,7 @@ class DataStore {
         received_at BIGINT NOT NULL,
         updated_at BIGINT
       )
-    `).catch((err) => console.error('init table error', err));
+    `).catch((err: unknown) => console.error('init table error', err));
   }
 
   async add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>): Promise<StoredRecord> {
@@ -32,7 +32,7 @@ class DataStore {
 
   async list(): Promise<StoredRecord[]> {
     const { rows } = await pool.query('SELECT * FROM records');
-    return rows.map((r) => ({
+    return rows.map((r: any) => ({
       id: r.id,
       type: r.type,
       payload: r.payload,
