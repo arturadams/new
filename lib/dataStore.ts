@@ -23,11 +23,15 @@ class DataStore {
 
   async add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>): Promise<StoredRecord> {
     const receivedAt = Date.now();
-    await pool.query(
-      'INSERT INTO records (id, type, payload, received_at) VALUES ($1, $2, $3, $4)',
-      [record.id, record.type, JSON.stringify(record.payload), receivedAt]
-    );
-    return { ...record, receivedAt };
+    try {
+      await pool.query(
+        'INSERT INTO records (id, type, payload, received_at) VALUES ($1, $2, $3, $4)',
+        [record.id, record.type, JSON.stringify(record.payload), receivedAt]
+      );
+      return { ...record, receivedAt };
+    } catch (err) {
+      throw err;
+    }
   }
 
   async list(): Promise<StoredRecord[]> {
