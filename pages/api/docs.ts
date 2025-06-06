@@ -12,7 +12,9 @@ export const getSwaggerSpec = () => createSwaggerSpec({
   },
 });
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   const spec = getSwaggerSpec();
   res.status(200).json(spec);
-}
+};
+
+export default handler;

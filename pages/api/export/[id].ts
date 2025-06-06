@@ -26,7 +26,7 @@ import { toPlainText, toMarkdown } from '../../../lib/exporters';
  *         description: Not found
  */
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query as { id: string };
   const format = (req.query.format as string) || 'json';
   const record = await store.get(id);
@@ -43,4 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   res.status(200).json(record);
-}
+};
+
+export default handler;

@@ -51,7 +51,7 @@ import { store } from '../../../lib/dataStore';
  *         description: Not found
  */
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query as { id: string };
 
   if (req.method === 'GET') {
@@ -75,4 +75,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
   res.status(405).end(`Method ${req.method} Not Allowed`);
-}
+};
+
+export default handler;
