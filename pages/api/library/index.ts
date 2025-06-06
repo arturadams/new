@@ -39,8 +39,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!id || !type) {
       return res.status(400).json({ message: 'id and type are required' });
     }
-    const entry = await store.add({ id, type, payload });
-    return res.status(200).json(entry);
+    try {
+      const entry = await store.add({ id, type, payload });
+      return res.status(200).json(entry);
+    } catch (err: any) {
+      if (err.code === '23505') {
+        return res.status(409).json({ message: 'Duplicate id' });
+      }
+      throw err;
+    }
   }
 
   if (req.method === 'GET') {
