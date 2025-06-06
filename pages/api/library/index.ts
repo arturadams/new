@@ -33,7 +33,7 @@ import { store, StoredRecord } from '../../../lib/dataStore';
  *       204:
  *         description: Cleared
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const { id, type, payload } = req.body as Omit<StoredRecord, 'receivedAt'>;
     if (!id || !type) {
@@ -62,4 +62,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
   res.status(405).end(`Method ${req.method} Not Allowed`);
-}
+};
+
+export default handler;
