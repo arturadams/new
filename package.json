@@ -19,6 +19,7 @@
     "swagger-ui-react": "^4.15.5"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.11.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^18.0.0",
     "@types/pg": "^8.15.4",
