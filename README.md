@@ -1,6 +1,6 @@
 # Data Library API
 
-This project is a simple Next.js application written in TypeScript and styled with Tailwind CSS. It exposes an API for storing arbitrary data objects in a PostgreSQL database (tested with Neon) and provides Swagger documentation. A small web UI lets you manage and export stored outcomes.
+This project is a simple Next.js application written in TypeScript and styled with Tailwind CSS. It exposes an API for storing arbitrary data objects in a PostgreSQL database (tested with Neon) and provides Swagger documentation. A small, responsive web UI lets you manage and export stored outcomes.
 
 ## Features
 
