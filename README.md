@@ -62,5 +62,5 @@ This command populates the `records` table with a few example entries using the 
 
 1. Push this repo to a Git host and create a new site on Netlify.
 2. In **Site settings → Environment variables**, set `DATABASE_URL` to your PostgreSQL connection string.
-3. Netlify runs `npm run build`, which builds and exports the static site into the `out` directory.
+3. Netlify runs `npm run build`. Next.js outputs a fully static site to the `out` directory because `output: 'export'` is set in `next.config.js`.
 4. API endpoints are served from Netlify Functions located in `netlify/functions` as configured in `netlify.toml`.
