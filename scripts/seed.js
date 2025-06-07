@@ -1,7 +1,16 @@
 const { Pool } = require('pg');
 
+const {
+  DATABASE_URL,
+  NETLIFY_DATABASE_URL,
+  NETLIFY_DATABASE_URL_UNPOOLED,
+} = process.env;
+
+const connectionString =
+  DATABASE_URL || NETLIFY_DATABASE_URL || NETLIFY_DATABASE_URL_UNPOOLED;
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
 });
 
 async function seed() {
