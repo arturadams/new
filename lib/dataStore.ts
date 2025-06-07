@@ -89,58 +89,6 @@ class DataStore {
   }
 }
 
-class MemoryStore {
-  private records = new Map<string, StoredRecord>();
-
-  async add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>): Promise<StoredRecord> {
-    if (this.records.has(record.id)) {
-      const err: any = new Error('duplicate');
-      err.code = '23505';
-      throw err;
-    }
-    const receivedAt = Date.now();
-    const entry = { ...record, receivedAt };
-    this.records.set(record.id, entry);
-    return entry;
-  }
-
-  async list(): Promise<StoredRecord[]> {
-    return Array.from(this.records.values());
-  }
-
-  async get(id: string): Promise<StoredRecord | null> {
-    return this.records.get(id) || null;
-  }
-
-  async update(id: string, update: Partial<Omit<StoredRecord, 'id' | 'receivedAt'>>): Promise<StoredRecord | null> {
-    const existing = await this.get(id);
-    if (!existing) return null;
-    const payload = update.payload !== undefined ? update.payload : existing.payload;
-    const type = update.type || existing.type;
-    const updatedAt = Date.now();
-    const updated = { ...existing, type, payload, updatedAt };
-    this.records.set(id, updated);
-    return updated;
-  }
-
-  async remove(id: string): Promise<StoredRecord | null> {
-    const existing = await this.get(id);
-    if (!existing) return null;
-    this.records.delete(id);
-    return existing;
-  }
-
-  async clear(): Promise<void> {
-    this.records.clear();
-  }
-}
-
-let store: DataStore | MemoryStore;
-
-if (pool) {
-  store = new DataStore(pool);
-} else {
-  store = new MemoryStore();
-}
+const store = new DataStore(pool);
 
 export { store };

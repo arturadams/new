@@ -22,7 +22,7 @@ The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional
 
 ## Environment Variables
 
-The API uses PostgreSQL when the `DATABASE_URL` environment variable is provided. If this variable is omitted **or contains anything other than a valid PostgreSQL connection string**, requests are served from an in-memory store instead of a database.
+The API requires the `DATABASE_URL` environment variable to be set to a valid PostgreSQL connection string. The application will throw an error on startup if this variable is missing or malformed.
 
 
 ```bash
@@ -62,5 +62,5 @@ This command populates the `records` table with a few example entries using the 
 
 1. Push this repo to a Git host and create a new site on Netlify.
 2. In **Site settings → Environment variables**, set `DATABASE_URL` to your PostgreSQL connection string.
-3. Netlify reads `netlify.toml` and runs `npm run build` with the `@netlify/plugin-nextjs` plugin to deploy the app.
-4. The plugin automatically publishes files from the `.next` directory; do not set the publish directory to the repo root.
+3. Netlify runs `npm run build`, which builds and exports the static site into the `out` directory.
+4. API endpoints are served from Netlify Functions located in `netlify/functions` as configured in `netlify.toml`.
