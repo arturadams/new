@@ -1,6 +1,26 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = "out"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/library"
+  to = "/.netlify/functions/library"
+  status = 200
+
+[[redirects]]
+  from = "/api/library/:id"
+  to = "/.netlify/functions/library-id?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/export/:id"
+  to = "/.netlify/functions/export-id?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/docs"
+  to = "/.netlify/functions/docs"
+  status = 200
