@@ -22,7 +22,7 @@ The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional
 
 ## Environment Variables
 
-The API uses PostgreSQL when the `DATABASE_URL` environment variable is provided. If this variable is omitted **or contains anything other than a valid PostgreSQL connection string**, requests are served from an in-memory store instead of a database.
+The API requires the `DATABASE_URL` environment variable to be set to a valid PostgreSQL connection string. The application will throw an error on startup if this variable is missing or malformed.
 
 
 ```bash
