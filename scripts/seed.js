@@ -1,15 +1,8 @@
 const { neon } = require('@netlify/neon');
 
-const {
-  DATABASE_URL,
-  NETLIFY_DATABASE_URL,
-  NETLIFY_DATABASE_URL_UNPOOLED,
-} = process.env;
-
-const connectionString =
-  DATABASE_URL || NETLIFY_DATABASE_URL || NETLIFY_DATABASE_URL_UNPOOLED;
-
-const sql = neon(connectionString);
+// `neon()` picks up the connection string from environment variables
+// so no arguments are needed here.
+const sql = neon();
 
 async function seed() {
   await sql`
