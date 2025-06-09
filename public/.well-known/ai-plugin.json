@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "data_library",
+  "name_for_human": "Data Library Assistant",
+  "description_for_model": "Manage records via the Data Library API",
+  "description_for_human": "Handles CRUD and export operations through the Data Library API",
+  "api": {
+    "type": "openapi",
+    "url": "https://llmtalks.netlify.app/openapi.yaml"
+  },
+  "auth": {
+    "type": "none"
+  },
+  "logo_url": "https://llmtalks.netlify.app/logo.png",
+  "contact_email": "support@llmtalks.netlify.app",
+  "legal_info_url": "https://llmtalks.netlify.app/legal"
+}
