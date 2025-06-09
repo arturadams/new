@@ -18,9 +18,20 @@ const Home = () => {
 
   const fetchRecords = async () => {
     setLoading(true);
-    const res = await fetch("/api/library");
-    const data = await res.json();
-    setRecords(data);
+    try {
+      const res = await fetch("/api/library");
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Failed to fetch records", res.status, text);
+        setRecords([]);
+      } else {
+        const data = await res.json();
+        setRecords(data);
+      }
+    } catch (err) {
+      console.error("Error fetching records", err);
+      setRecords([]);
+    }
     setLoading(false);
   };
 

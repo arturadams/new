@@ -24,7 +24,7 @@ The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional
 
 The API uses the `@netlify/neon` driver to connect to Postgres. The code calls
 `neon()` without arguments so it automatically reads the connection string from
-`DATABASE_URL` when running locally. You can set it like this:
+`DATABASE_URL` when running locally.
 
 ```bash
 export DATABASE_URL=postgres://USER:PASSWORD@HOST/DATABASE

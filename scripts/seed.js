@@ -1,7 +1,5 @@
 const { neon } = require('@netlify/neon');
 
-// `neon()` picks up the connection string from environment variables
-// so no arguments are needed here.
 const sql = neon();
 
 async function seed() {
