@@ -1,18 +1,8 @@
-import { Pool } from 'pg';
+import { neon } from '@netlify/neon';
 
-const {
-  DATABASE_URL,
-  NETLIFY_DATABASE_URL,
-  NETLIFY_DATABASE_URL_UNPOOLED,
-} = process.env;
+// `neon()` automatically reads the connection string from the appropriate
+// environment variable (`DATABASE_URL`, `NETLIFY_DATABASE_URL`, or
+// `NETLIFY_DATABASE_URL_UNPOOLED`).
+const sql = neon();
 
-const connectionString =
-  DATABASE_URL || NETLIFY_DATABASE_URL || NETLIFY_DATABASE_URL_UNPOOLED;
-
-if (!connectionString || !connectionString.startsWith('postgres')) {
-  throw new Error('Database connection string is missing or invalid');
-}
-
-const pool = new Pool({ connectionString });
-
-export default pool;
+export default sql;

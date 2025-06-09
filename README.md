@@ -22,16 +22,17 @@ The API endpoint `/api/library` supports `GET`, `POST`, and `DELETE`. Additional
 
 ## Environment Variables
 
-The API requires a PostgreSQL connection string. Locally you can define
-`DATABASE_URL`:
+The API uses the `@netlify/neon` driver to connect to Postgres. The code calls
+`neon()` without arguments so it automatically reads the connection string from
+`DATABASE_URL` when running locally. You can set it like this:
 
 ```bash
 export DATABASE_URL=postgres://USER:PASSWORD@HOST/DATABASE
 ```
 
-When deployed on Netlify using the database add-on, the connection string is
-provided via `NETLIFY_DATABASE_URL` (and `NETLIFY_DATABASE_URL_UNPOOLED` for
-serverless drivers), so no additional configuration is necessary.
+When deployed on Netlify, the driver automatically reads
+`NETLIFY_DATABASE_URL` (and `NETLIFY_DATABASE_URL_UNPOOLED` if present), so no
+additional configuration is necessary.
 
 ### Tailwind CSS Setup
 
@@ -61,7 +62,7 @@ npm run seed
 ```
 
 This command populates the `records` table with a few example entries using the
-same connection string configured for the application.
+same environment-based connection as the application.
 
 ### Deploying to Netlify
 
