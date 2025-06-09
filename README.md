@@ -75,3 +75,16 @@ same environment-based connection as the application.
    `out` directory because `output: 'export'` is set in `next.config.js`.
 4. API endpoints are served from Netlify Functions located in `netlify/functions`
    as configured in `netlify.toml`.
+
+### Enabling ChatGPT Actions
+
+The `public/openapi.yaml` file contains the OpenAPI definition for the API. A plugin manifest is provided at `public/.well-known/ai-plugin.json` which references this schema.
+
+Deploy the contents of the `public` folder so they are reachable at your domain root. For the hosted demo this repository refers to, they are available at:
+
+```
+https://llmtalks.netlify.app/openapi.yaml
+https://llmtalks.netlify.app/.well-known/ai-plugin.json
+```
+
+These files allow ChatGPT or a custom GPT to perform real actions through the Data Library API.
