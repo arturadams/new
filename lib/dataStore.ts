@@ -1,5 +1,5 @@
-import pool from './db';
-import type { Pool } from 'pg';
+import sql from './db';
+import type { NeonQueryFunction } from '@neondatabase/serverless';
 
 export type StoredRecord = {
   id: string;
@@ -10,12 +10,11 @@ export type StoredRecord = {
 };
 
 class DataStore {
-  private pool: Pool;
+  private sql: NeonQueryFunction<false, false>;
 
-  constructor(pool: Pool) {
-    this.pool = pool;
-    this.pool
-      .query(`
+  constructor(sql: NeonQueryFunction<false, false>) {
+    this.sql = sql;
+    this.sql`
       CREATE TABLE IF NOT EXISTS records (
         id TEXT PRIMARY KEY,
         type TEXT NOT NULL,
@@ -23,17 +22,13 @@ class DataStore {
         received_at BIGINT NOT NULL,
         updated_at BIGINT
       )
-    `)
-      .catch((err: unknown) => console.error('init table error', err));
+    `.catch((err: unknown) => console.error('init table error', err));
   }
 
   async add(record: Omit<StoredRecord, 'receivedAt' | 'updatedAt'>): Promise<StoredRecord> {
     const receivedAt = Date.now();
     try {
-      await this.pool.query(
-        'INSERT INTO records (id, type, payload, received_at) VALUES ($1, $2, $3, $4)',
-        [record.id, record.type, JSON.stringify(record.payload), receivedAt]
-      );
+      await this.sql`INSERT INTO records (id, type, payload, received_at) VALUES (${record.id}, ${record.type}, ${JSON.stringify(record.payload)}, ${receivedAt})`;
       return { ...record, receivedAt };
     } catch (err) {
       throw err;
@@ -41,7 +36,7 @@ class DataStore {
   }
 
   async list(): Promise<StoredRecord[]> {
-    const { rows } = await this.pool.query('SELECT * FROM records');
+    const rows = await this.sql`SELECT * FROM records`;
     return rows.map((r: any) => ({
       id: r.id,
       type: r.type,
@@ -52,7 +47,7 @@ class DataStore {
   }
 
   async get(id: string): Promise<StoredRecord | null> {
-    const { rows } = await this.pool.query('SELECT * FROM records WHERE id = $1', [id]);
+    const rows = await this.sql`SELECT * FROM records WHERE id = ${id}`;
     const r = rows[0];
     if (!r) return null;
     return {
@@ -70,25 +65,22 @@ class DataStore {
     const payload = update.payload !== undefined ? update.payload : record.payload;
     const type = update.type || record.type;
     const updatedAt = Date.now();
-    await this.pool.query(
-      'UPDATE records SET type = $2, payload = $3, updated_at = $4 WHERE id = $1',
-      [id, type, JSON.stringify(payload), updatedAt]
-    );
+    await this.sql`UPDATE records SET type = ${type}, payload = ${JSON.stringify(payload)}, updated_at = ${updatedAt} WHERE id = ${id}`;
     return { id, type, payload, receivedAt: record.receivedAt, updatedAt };
   }
 
   async remove(id: string): Promise<StoredRecord | null> {
     const record = await this.get(id);
     if (!record) return null;
-    await this.pool.query('DELETE FROM records WHERE id = $1', [id]);
+    await this.sql`DELETE FROM records WHERE id = ${id}`;
     return record;
   }
 
   async clear(): Promise<void> {
-    await this.pool.query('DELETE FROM records');
+    await this.sql`DELETE FROM records`;
   }
 }
 
-const store = new DataStore(pool);
+const store = new DataStore(sql);
 
 export { store };

@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { neon } from '@netlify/neon';
 
 const {
   DATABASE_URL,
@@ -13,6 +13,6 @@ if (!connectionString || !connectionString.startsWith('postgres')) {
   throw new Error('Database connection string is missing or invalid');
 }
 
-const pool = new Pool({ connectionString });
+const sql = neon(connectionString);
 
-export default pool;
+export default sql;
